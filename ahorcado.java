@@ -1,4 +1,5 @@
 import java.util.*;
+import java.time.LocalTime;
 
 public class ahorcado {
 
@@ -6,6 +7,10 @@ public class ahorcado {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int numberOfWords;
+        int tiempoLimite = 60; //tiempo limite en segundos
+        long tiempoActual;
+        int tiempoTranscurrido;
+
         //definir lista de palabras con varias palabras para el juego
         String palabras[] = {
                 "elefante", "computadora", "montaña", "bicicleta", "zapato",
@@ -13,6 +18,7 @@ public class ahorcado {
                 "coche", "avión", "libro", "estrella", "chocolate", "mariposa",
                 "flor", "hielo", "reloj", "naranja", "lluvia", "ratón", "tenedor"
         };
+        long tiempoInicio = System.currentTimeMillis();
 
         //Numero de palabras aleatorias a generar
         numberOfWords = 1;
@@ -47,19 +53,32 @@ public class ahorcado {
         System.out.println("");
 
 
-        System.out.println("Intentos restantes: " + intentos);
-        System.out.println("Letras ya adivinadas: " + letras_adivinadas.toString());
+
 
         for (int i = 0; i < palabra_secreta.length(); i++) {
             palabra_Oculta.append("_");
         }
-        System.out.println("La palabra oculta: " + palabra_Oculta);
+
 
         //Solicitar al jugador que introduzca una letra
 
         while (intentos > 0 && palabra_Oculta.toString().contains("_")) {
+            tiempoActual = System.currentTimeMillis();
+            tiempoTranscurrido = (int) ((tiempoActual - tiempoInicio) / 1000);
             System.out.println("Introduce una letra: ");
             letra = scanner.nextLine().toLowerCase();
+
+
+            if(tiempoTranscurrido > tiempoLimite){
+                System.out.println("Se acabó el tiempo, la palabra oculta era: " +palabra_secreta);
+                return;
+            }
+
+            //Mostrar estado actual
+            System.out.println("Palabra oculta: " + palabra_Oculta);
+            System.out.println("Intentos restantes: " + intentos);
+            System.out.println("Letras ya adivinadas: " + letras_adivinadas.toString());
+            System.out.println("Tiempo restante: " +(tiempoLimite - tiempoTranscurrido));
 
             //validar entrada
             if (letra.length() != 1 || !Character.isLetter(letra.charAt(0))) {
@@ -111,23 +130,6 @@ public class ahorcado {
 }
 
 
-
-
-        //4.3 VALIDAR entrada:
-
-             //   - SI la entrada no es una letra válida, MOSTRAR mensaje de error y continuar.
-        //4.4 AÑADIR la letra a letras_adivinadas.
-        //4.5 VERIFICAR:
-       // - SI la letra está en palabra_secreta:
-       // - ACTUALIZAR palabra_oculta para revelar todas las ocurrencias de la letra en palabra_secreta.
-       //         - SI palabra_oculta es igual a palabra_secreta, MOSTRAR mensaje de victoria y SALIR del bucle.
-       //         - SI la letra NO está en palabra_secreta:
-      //  - RESTAR 1 a intentos_restantes.
-     //   - MOSTRAR mensaje indicando que la letra no está en la palabra.
-      //  5. FIN DEL BUCLE.
-
-      //  6. SI intentos_restantes == 0:
-       // MOSTRAR mensaje de derrota y la palabra_secreta.
 
 
 
