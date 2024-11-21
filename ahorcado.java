@@ -8,10 +8,10 @@ public class ahorcado {
         int numberOfWords;
         //definir lista de palabras con varias palabras para el juego
         String palabras[] = {
-                "elefante","computadora","montaña","bicicleta","zapato",
-                "solitario","guitarra", "amistad", "ventana","plenitud",
-                "coche", "avión","libro","estrella","chocolate","mariposa",
-                "flor","hielo","reloj","naranja","lluvia","ratón","tenedor"
+                "elefante", "computadora", "montaña", "bicicleta", "zapato",
+                "solitario", "guitarra", "amistad", "ventana", "plenitud",
+                "coche", "avión", "libro", "estrella", "chocolate", "mariposa",
+                "flor", "hielo", "reloj", "naranja", "lluvia", "ratón", "tenedor"
         };
 
         //Numero de palabras aleatorias a generar
@@ -24,79 +24,91 @@ public class ahorcado {
         Random random = new Random();
 
         //Seleccionar palabras aleatorias
-        for (int i=0; i < numberOfWords; i++){
+        for (int i = 0; i < numberOfWords; i++) {
             int randomIndex = random.nextInt(palabras.length); //indice aleatorio
             randomWords.add(palabras[randomIndex]); //Añadir palabra a la lista
-            }
+        }
 
         //System.out.println("Palabra secreta: " + randomWords);
         String palabra_secreta = randomWords.get(random.nextInt(randomWords.size()));
-        System.out.println("Palabra secreta: " +palabra_secreta);
+        //System.out.println("Palabra secreta: " + palabra_secreta);
 
 
         //INICIALIZAR:
         int intentos = 6;
-        String letra;
+        String letra = "";
+        int fin = 0;
 
         ArrayList<String> letras_adivinadas = new ArrayList<String>();
         StringBuilder palabra_Oculta = new StringBuilder();
 
+        System.out.println("Bienvenido al juego del ahorcado!");
+        System.out.println("Adivina la palabra antes de quedarte sin intentos");
+        System.out.println("");
 
-        System.out.println("Intentos restantes: "+intentos);
 
-        System.out.println("Letras ya adivinadas: " +letras_adivinadas.toString());
+        System.out.println("Intentos restantes: " + intentos);
+        System.out.println("Letras ya adivinadas: " + letras_adivinadas.toString());
 
-        for(int i=0; i < palabra_secreta.length(); i++){
+        for (int i = 0; i < palabra_secreta.length(); i++) {
             palabra_Oculta.append("_");
         }
-        System.out.println("La palabra oculta: " +palabra_Oculta);
+        System.out.println("La palabra oculta: " + palabra_Oculta);
 
+        //Solicitar al jugador que introduzca una letra
 
-       // 4.2 SOLICITAR al jugador que introduzca una letra
-        do{
+        while (intentos > 0 && palabra_Oculta.toString().contains("_")) {
             System.out.println("Introduce una letra: ");
-             letra = scanner.nextLine();
+            letra = scanner.nextLine().toLowerCase();
 
-            // SI la letra ya fue adivinada, MOSTRAR mensaje de advertencia y continuar.
-            if (letras_adivinadas.contains(letra)) {
-                System.out.println("Esta letra ya ha sido introducida.");
-                intentos--;
+            //validar entrada
+            if (letra.length() != 1 || !Character.isLetter(letra.charAt(0))) {
+                System.out.println("Por favor, introduce una letra válida.");
                 continue;
-
             }
 
-            if(!isString(letra)){
-                System.out.println("Error, introduce una letra.");
-            }else{
-                letras_adivinadas.add(letra);
-                System.out.println("Letra introducida: " +letra);
-                System.out.println("Letras ya adivinadas: " +letras_adivinadas.toString());
+            //comprobamos si la letra fue adivinada
+            if (letras_adivinadas.contains(letra)) {
+                System.out.println("Ya adivinaste esta letra. Intenta con otra");
+                continue;
             }
-            //SI la letra está en palabra_secreta:
-            if(palabra_secreta.contains(letra)){
-                for(int i=0; i < palabra_secreta.length(); i++ ){
-                    if(palabra_secreta.charAt(i) == letra.charAt(0)){
+
+            //Añadir la letra a la lista de letras acertadas
+            letras_adivinadas.add(letra);
+
+            //verificamos si la letra está en la palabra secreta
+            if (palabra_secreta.indexOf(letra) >= 0) {
+                System.out.println("Perfecto! la letra está en la palabra");
+
+                for (int i = 0; i < palabra_secreta.length(); i++) {
+                    if (palabra_secreta.charAt(i) == letra.charAt(0)) {
                         palabra_Oculta.setCharAt(i, letra.charAt(0));
                     }
                 }
-                System.out.println("Es correcto!");
-                System.out.println(palabra_Oculta.toString());
 
-                if(palabra_Oculta.equals(palabra_secreta)){
-                    System.out.println("Felicidades has ganado!");
-                    break;
-                }
 
+            } else {
+                intentos--;
+                System.out.println("Letra incorrecta. Te quedan " + intentos + " intentos restantes");
             }
-            // - ACTUALIZAR palabra_oculta para revelar todas las ocurrencias de la letra en palabra_secreta.
+            // Actualizar la palabra oculta
+            System.out.println("Palabra oculta: " +palabra_Oculta);
 
 
+        }
+
+        if(palabra_Oculta.toString().equals(palabra_secreta)){
+            System.out.println("\n¡Felicidades! Adivinaste la palabra: " +palabra_secreta);
+        }else{
+            System.out.println("\nTe quedaste sin intentos. La palabra era: " + palabra_secreta);
+        }
+
+        scanner.close();
 
 
+    }
 
-
-        } while (!isString(letra) || letras_adivinadas.contains(letra) || !palabra_Oculta.equals(palabra_secreta));  // El ciclo continuará hasta que se ingrese una letra válida y no repetida
-
+}
 
 
 
@@ -118,12 +130,6 @@ public class ahorcado {
        // MOSTRAR mensaje de derrota y la palabra_secreta.
 
 
-        }
-
-    public static boolean isString(String str) {
-        // Verifica si el String tiene un solo carácter y es alfabético
-        return str != null && str.length() == 1 && str.matches("[a-zA-Z]");
-    }
 
 
 
@@ -132,7 +138,6 @@ public class ahorcado {
 
 
 
-    }
 
 
 
